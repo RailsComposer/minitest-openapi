@@ -13,3 +13,8 @@
 - `minitest-openapi-api` — mountable Rails engine serving the generated
   document.
 - `minitest-openapi-ui` — mountable Rails engine rendering Swagger UI.
+
+### Fixed
+- Response validation now allows `null` for a `nullable` field that also
+  declares an `enum`. Previously `nullable: true` added `"null"` to `type`
+  but not to the (exhaustive) `enum`, so a null value was rejected.
