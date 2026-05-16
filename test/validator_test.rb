@@ -14,7 +14,8 @@ class ValidatorTest < Minitest::Test
           "required" => ["id", "name"],
           "properties" => {
             "id" => {"type" => "integer"},
-            "name" => {"type" => "string", "nullable" => true}
+            "name" => {"type" => "string", "nullable" => true},
+            "kind" => {"type" => "string", "enum" => ["a", "b"], "nullable" => true}
           }
         }
       }
@@ -33,6 +34,19 @@ class ValidatorTest < Minitest::Test
   def test_allows_null_for_a_nullable_field
     schema = {"$ref" => "#/components/schemas/Widget"}
     validator.validate!(schema, {"id" => 1, "name" => nil}, context: "test")
+  end
+
+  def test_allows_null_for_a_nullable_enum_field
+    schema = {"$ref" => "#/components/schemas/Widget"}
+    validator.validate!(schema, {"id" => 1, "name" => "x", "kind" => nil}, context: "test")
+    validator.validate!(schema, {"id" => 1, "name" => "x", "kind" => "a"}, context: "test")
+  end
+
+  def test_rejects_a_value_outside_a_nullable_enum
+    schema = {"$ref" => "#/components/schemas/Widget"}
+    assert_raises(Mismatch) do
+      validator.validate!(schema, {"id" => 1, "name" => "x", "kind" => "z"}, context: "test")
+    end
   end
 
   def test_rejects_a_wrong_type

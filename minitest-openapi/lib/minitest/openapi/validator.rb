@@ -40,13 +40,20 @@ module Minitest
         "#{location}: #{error["type"]}"
       end
 
-      # OpenAPI `nullable: true` -> JSON Schema "null" added to `type`.
+      # OpenAPI `nullable: true` has no JSON Schema equivalent. Normalize it:
+      # add "null" to `type`, and — since an `enum` is exhaustive — add `nil`
+      # to any `enum` so a null value declared nullable is actually allowed.
       def normalize(node)
         case node
         when Hash
           normalized = node.each_with_object({}) { |(k, v), acc| acc[k] = normalize(v) }
-          if normalized.delete("nullable") && normalized["type"].is_a?(String)
-            normalized["type"] = [normalized["type"], "null"]
+          if normalized.delete("nullable")
+            if normalized["type"].is_a?(String)
+              normalized["type"] = [normalized["type"], "null"]
+            end
+            if normalized["enum"].is_a?(Array) && !normalized["enum"].include?(nil)
+              normalized["enum"] += [nil]
+            end
           end
           normalized
         when Array
