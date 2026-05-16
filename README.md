@@ -69,6 +69,7 @@ class MediaEntriesApiTest < ActionDispatch::IntegrationTest
   test "lists media entries" do
     openapi_get "/api/v1/media_entries",
       summary: "List media entries",
+      operation_id: "listMediaEntries",
       tags: ["Media entries"],
       response: {
         status: 200,

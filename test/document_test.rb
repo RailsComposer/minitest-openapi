@@ -21,6 +21,13 @@ class DocumentTest < Minitest::Test
       operation.dig("responses", "200", "content", "application/json", "schema"))
   end
 
+  def test_records_an_operation_id
+    doc = Minitest::OpenAPI::Document.new(base)
+    doc.record(verb: :get, path: "/widgets", status: 200, operation_id: "listWidgets")
+
+    assert_equal "listWidgets", doc.to_h.dig("paths", "/widgets", "get", "operationId")
+  end
+
   def test_merges_multiple_responses_on_one_operation
     doc = Minitest::OpenAPI::Document.new(base)
     doc.record(verb: :get, path: "/widgets/{id}", status: 200, schema: {"type" => "object"})

@@ -53,7 +53,7 @@ class SpecMetadataTest < Minitest::Test
     captured = nil
 
     base.api_path "/things" do
-      api_operation :get, summary: "List things" do
+      api_operation :get, summary: "List things", operation_id: "listThings" do
         api_response 200, schema: {"type" => "array"} do
           captured = openapi_metadata
         end
@@ -63,6 +63,7 @@ class SpecMetadataTest < Minitest::Test
     assert_equal "/things", captured[:path]
     assert_equal :get, captured[:verb]
     assert_equal "List things", captured[:summary]
+    assert_equal "listThings", captured[:operation_id]
     assert_equal 200, captured[:response_status]
   end
 end

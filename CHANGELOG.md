@@ -14,6 +14,15 @@
   document.
 - `minitest-openapi-ui` — mountable Rails engine rendering Swagger UI.
 
+- `operation_id:` — both DSLs accept it; it is recorded as the operation's
+  `operationId`, which client codegen uses to name generated methods.
+
+### Changed
+- The document is written via an `after_run` hook registered when
+  `minitest/openapi` is required (gated on `MINITEST_OPENAPI`), replacing the
+  minitest plugin file. Plugin auto-discovery did not fire reliably under
+  Rails' test runner or with git-sourced gems.
+
 ### Fixed
 - Response validation now allows `null` for a `nullable` field that also
   declares an `enum`. Previously `nullable: true` added `"null"` to `type`

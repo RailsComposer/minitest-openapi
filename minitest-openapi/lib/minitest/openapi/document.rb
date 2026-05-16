@@ -17,11 +17,12 @@ module Minitest
       end
 
       # Records one operation/response pair. Called by the recorder.
-      def record(verb:, path:, status:, schema: nil, summary: nil, description: nil,
-        tags: nil, parameters: nil, request_body: nil, response_description: nil,
-        content_type: "application/json")
+      def record(verb:, path:, status:, schema: nil, summary: nil, operation_id: nil,
+        description: nil, tags: nil, parameters: nil, request_body: nil,
+        response_description: nil, content_type: "application/json")
         operation = ((@paths[path] ||= {})[verb.to_s.downcase] ||= {})
         operation["summary"] ||= summary if summary
+        operation["operationId"] ||= operation_id if operation_id
         operation["description"] ||= description if description
         operation["tags"] ||= tags if tags && !tags.empty?
         operation["parameters"] ||= parameters if parameters && !parameters.empty?
