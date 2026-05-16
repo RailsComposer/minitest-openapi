@@ -4,6 +4,7 @@ require "json"
 require "yaml"
 require "pathname"
 require "fileutils"
+require "minitest"
 
 require_relative "openapi/version"
 require_relative "openapi/configuration"
@@ -62,5 +63,18 @@ module Minitest
         File.join((root || Dir.pwd).to_s, path)
       end
     end
+  end
+end
+
+# When MINITEST_OPENAPI is set (the openapi:generate rake task sets it), write
+# the document once the suite finishes. Registered here, at require time,
+# rather than via a minitest plugin file: plugin auto-discovery is unreliable
+# under Rails' test runner and with git-sourced gems, whereas test_helper.rb
+# requires this file directly. Ordinary test runs leave MINITEST_OPENAPI unset
+# and are unaffected (responses are still validated; the file is just not
+# written).
+if ENV["MINITEST_OPENAPI"]
+  Minitest.after_run do
+    warn "minitest-openapi: wrote #{Minitest::OpenAPI.generate!}"
   end
 end

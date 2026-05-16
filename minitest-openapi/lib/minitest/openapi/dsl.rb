@@ -20,12 +20,12 @@ module Minitest
     # response so further assertions can be made.
     module DSL
       %i[get post patch put delete].each do |verb|
-        define_method(:"openapi_#{verb}") do |request_path, response:, doc_path: nil, summary: nil, description: nil, tags: nil, parameters: nil, params: nil, headers: nil, body: nil, request_body: nil|
+        define_method(:"openapi_#{verb}") do |request_path, response:, doc_path: nil, summary: nil, operation_id: nil, description: nil, tags: nil, parameters: nil, params: nil, headers: nil, body: nil, request_body: nil|
           Recorder.run(
             test: self, verb: verb, request_path: request_path, doc_path: doc_path,
-            response: response, summary: summary, description: description, tags: tags,
-            parameters: parameters, params: params, headers: headers, body: body,
-            request_body: request_body
+            response: response, summary: summary, operation_id: operation_id,
+            description: description, tags: tags, parameters: parameters,
+            params: params, headers: headers, body: body, request_body: request_body
           )
         end
       end

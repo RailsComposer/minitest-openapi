@@ -15,8 +15,8 @@ module Minitest
       # response      - an Integer status, or { status:, schema:, description: }
       # assert_status - when true, fails the test if the status differs
       def run(test:, verb:, request_path:, response:, doc_path: nil, summary: nil,
-        description: nil, tags: nil, parameters: nil, params: nil, headers: nil,
-        body: nil, request_body: nil, assert_status: false)
+        operation_id: nil, description: nil, tags: nil, parameters: nil, params: nil,
+        headers: nil, body: nil, request_body: nil, assert_status: false)
         spec = normalize_response(response)
         doc_path ||= request_path
 
@@ -31,8 +31,8 @@ module Minitest
 
         Minitest::OpenAPI.document.record(
           verb: verb, path: doc_path, status: spec[:status], schema: spec[:schema],
-          summary: summary, description: description, tags: tags,
-          parameters: parameters, request_body: request_body,
+          summary: summary, operation_id: operation_id, description: description,
+          tags: tags, parameters: parameters, request_body: request_body,
           response_description: spec[:description]
         )
 

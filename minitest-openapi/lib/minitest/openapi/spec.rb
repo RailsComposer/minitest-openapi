@@ -72,6 +72,7 @@ module Minitest
             doc_path: doc_path,
             response: {status: status, schema: meta[:schema], description: meta[:description]},
             summary: meta[:summary],
+            operation_id: meta[:operation_id],
             description: meta[:operation_description],
             tags: meta[:tags],
             parameters: meta[:parameters],

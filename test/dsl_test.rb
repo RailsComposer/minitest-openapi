@@ -41,6 +41,13 @@ class DSLTest < Minitest::Test
     assert operation.dig("responses", "201")
   end
 
+  def test_openapi_get_records_an_operation_id
+    openapi_get "/widgets", operation_id: "listWidgets", response: 200
+
+    operation = Minitest::OpenAPI.document.to_h.dig("paths", "/widgets", "get")
+    assert_equal "listWidgets", operation["operationId"]
+  end
+
   def test_response_with_only_a_status_records_no_schema
     openapi_get "/widgets", response: 200
 
