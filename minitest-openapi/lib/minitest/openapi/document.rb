@@ -5,6 +5,13 @@ module Minitest
     # The in-memory OpenAPI document. Tests record operations into it as they
     # run; #to_h merges those operations into the base document's `paths`.
     class Document
+      # Canonical ordering, so the emitted document is identical regardless
+      # of the order tests recorded into it (minitest randomizes test order).
+      VERB_ORDER = %w[get put post patch delete options head trace].freeze
+      OPERATION_KEYS = %w[
+        tags summary description operationId parameters requestBody responses
+      ].freeze
+
       def initialize(base)
         @base = base
         @paths = {}
@@ -38,12 +45,15 @@ module Minitest
       end
 
       # The assembled document: the base with recorded operations merged into
-      # `paths`, paths sorted for a stable diff.
+      # `paths`. Paths, verbs, operation keys, and response statuses are all
+      # canonically ordered, so the output is stable across test runs.
       def to_h
         doc = deep_dup(@base)
-        paths = doc["paths"] || {}
-        @paths.keys.sort.each do |path|
-          (paths[path] ||= {}).merge!(@paths[path])
+        base_paths = doc["paths"] || {}
+        paths = {}
+        (base_paths.keys | @paths.keys).sort.each do |path|
+          merged = (base_paths[path] || {}).merge(@paths[path] || {})
+          paths[path] = canonical_path_item(merged)
         end
         doc["paths"] = paths
         doc
@@ -54,6 +64,25 @@ module Minitest
       end
 
       private
+
+      # Orders the verbs within a path item, and each operation's keys.
+      def canonical_path_item(verbs)
+        ordered = {}
+        (VERB_ORDER & verbs.keys).each { |verb| ordered[verb] = canonical_operation(verbs[verb]) }
+        (verbs.keys - VERB_ORDER).sort.each { |key| ordered[key] = verbs[key] }
+        ordered
+      end
+
+      # Orders an operation's keys and sorts its responses by status code.
+      def canonical_operation(operation)
+        ordered = {}
+        OPERATION_KEYS.each { |key| ordered[key] = operation[key] if operation.key?(key) }
+        (operation.keys - OPERATION_KEYS).sort.each { |key| ordered[key] = operation[key] }
+        if ordered["responses"].is_a?(Hash)
+          ordered["responses"] = ordered["responses"].sort_by { |status, _| status.to_i }.to_h
+        end
+        ordered
+      end
 
       def deep_dup(obj)
         case obj

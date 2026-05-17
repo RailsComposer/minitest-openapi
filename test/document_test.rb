@@ -37,6 +37,20 @@ class DocumentTest < Minitest::Test
     assert_equal %w[200 404], responses.keys.sort
   end
 
+  # The output must not depend on the order tests recorded into the document,
+  # since minitest randomizes test order.
+  def test_emits_canonical_operation_and_response_ordering
+    doc = Minitest::OpenAPI::Document.new(base)
+    # Record the 404 first and add the summary only with the later 200.
+    doc.record(verb: :get, path: "/widgets/{id}", status: 404, operation_id: "getWidget")
+    doc.record(verb: :get, path: "/widgets/{id}", status: 200, summary: "Get a widget",
+      schema: {"type" => "object"})
+
+    operation = doc.to_h.dig("paths", "/widgets/{id}", "get")
+    assert_equal %w[summary operationId responses], operation.keys
+    assert_equal %w[200 404], operation["responses"].keys
+  end
+
   def test_sorts_paths_for_a_stable_document
     doc = Minitest::OpenAPI::Document.new(base)
     doc.record(verb: :get, path: "/zebras", status: 200)

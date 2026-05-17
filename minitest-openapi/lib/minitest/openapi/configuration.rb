@@ -18,9 +18,6 @@ module Minitest
       # Validate each response body against its declared schema as tests run.
       attr_accessor :validate_responses
 
-      # Test paths the openapi:generate rake task runs.
-      attr_accessor :test_paths
-
       DEFAULT_BASE = {
         "openapi" => "3.0.3",
         "info" => {"title" => "API", "version" => "1.0.0"},
@@ -30,7 +27,6 @@ module Minitest
       def initialize
         @output_path = "openapi/openapi.json"
         @validate_responses = true
-        @test_paths = ["test/integration"]
         @base = deep_dup(DEFAULT_BASE)
       end
 

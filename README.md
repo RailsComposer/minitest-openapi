@@ -40,7 +40,6 @@ require "minitest/openapi"
 
 Minitest::OpenAPI.configure do |config|
   config.output_path = "openapi/v1/openapi.json"   # where openapi:generate writes
-  config.test_paths  = ["test/integration/api"]    # what openapi:generate runs
   config.validate_responses = true                 # validate as the suite runs
 
   # The base document — everything not derived from tests. A Hash, or a path
@@ -127,14 +126,16 @@ templated path can be turned into a concrete URL from records the test sets up.
 ## Generating the document
 
 ```bash
-bin/rails openapi:generate
+bin/rails openapi:generate                          # runs test/integration
+bin/rails "openapi:generate[test/integration/api]"   # scope to specific paths
 ```
 
 This runs your API tests with the document writer enabled and writes
-`config.output_path`. Run it in CI and diff the result to catch a contract
-that changed without the spec being regenerated. Ordinary `bin/rails test`
-runs are unaffected — they still validate responses, they just don't write the
-file.
+`config.output_path`. The output is byte-stable — paths, operations, and
+responses are emitted in a canonical order — so you can run it in CI and diff
+the result to catch a contract that changed without the spec being
+regenerated. Ordinary `bin/rails test` runs are unaffected — they still
+validate responses, they just don't write the file.
 
 ## Serving the document and UI
 
