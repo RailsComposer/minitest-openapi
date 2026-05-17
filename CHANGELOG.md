@@ -22,8 +22,16 @@
   `minitest/openapi` is required (gated on `MINITEST_OPENAPI`), replacing the
   minitest plugin file. Plugin auto-discovery did not fire reliably under
   Rails' test runner or with git-sourced gems.
+- `openapi:generate` accepts test paths as arguments
+  (`openapi:generate[test/integration/api]`), defaulting to `test/integration`.
+  The unreachable `Configuration#test_paths` setting is removed — a rake task
+  cannot see config applied in `test_helper.rb`.
 
 ### Fixed
 - Response validation now allows `null` for a `nullable` field that also
   declares an `enum`. Previously `nullable: true` added `"null"` to `type`
   but not to the (exhaustive) `enum`, so a null value was rejected.
+- The generated document is now byte-stable: paths, verbs, operation keys,
+  and response statuses are emitted in a canonical order regardless of the
+  order tests recorded into it (minitest randomizes test order). Previously
+  a CI "spec is up to date" diff could flip between runs.
