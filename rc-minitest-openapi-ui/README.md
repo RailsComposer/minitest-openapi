@@ -1,8 +1,8 @@
-# minitest-openapi-ui
+# rc-minitest-openapi-ui
 
 A mountable Rails engine that renders Swagger UI for an OpenAPI document,
-pairing with [`minitest-openapi`](https://github.com/RailsComposer/minitest-openapi)
-and `minitest-openapi-api`.
+pairing with [`rc-minitest-openapi`](https://github.com/RailsComposer/minitest-openapi)
+and `rc-minitest-openapi-api`.
 
 ```ruby
 # config/routes.rb

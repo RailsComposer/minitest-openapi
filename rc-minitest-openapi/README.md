@@ -1,4 +1,4 @@
-# minitest-openapi
+# rc-minitest-openapi
 
 Generate an OpenAPI 3.0 document from your Rails minitest API tests.
 

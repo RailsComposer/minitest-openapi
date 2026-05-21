@@ -3,11 +3,11 @@
 require_relative "lib/minitest/openapi/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "minitest-openapi"
+  spec.name = "rc-minitest-openapi"
   spec.version = Minitest::OpenAPI::VERSION
   spec.authors = ["RailsComposer"]
   spec.summary = "Generate an OpenAPI document from your minitest API tests."
-  spec.description = "minitest-openapi turns Rails minitest integration tests into the " \
+  spec.description = "rc-minitest-openapi turns Rails minitest integration tests into the " \
     "source of truth for an OpenAPI 3.0 document. Tests declare each operation and its " \
     "response schema, the live response is validated against that schema as the suite " \
     "runs, and the openapi:generate rake task writes the document. An rswag-style block " \

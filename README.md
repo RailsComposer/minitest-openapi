@@ -1,4 +1,4 @@
-# minitest-openapi
+# rc-minitest-openapi
 
 Generate an [OpenAPI](https://www.openapis.org/) 3.0 document from your Rails
 **minitest** API tests — an rswag-style workflow for teams that use minitest
@@ -14,21 +14,21 @@ This repository contains three gems, mirroring rswag's split:
 
 | Gem | Purpose |
 | --- | --- |
-| [`minitest-openapi`](minitest-openapi) | The test DSLs, response validation, and the `openapi:generate` rake task. |
-| [`minitest-openapi-api`](minitest-openapi-api) | A mountable engine that serves the generated document. |
-| [`minitest-openapi-ui`](minitest-openapi-ui) | A mountable engine that renders Swagger UI. |
+| [`rc-minitest-openapi`](rc-minitest-openapi) | The test DSLs, response validation, and the `openapi:generate` rake task. |
+| [`rc-minitest-openapi-api`](rc-minitest-openapi-api) | A mountable engine that serves the generated document. |
+| [`rc-minitest-openapi-ui`](rc-minitest-openapi-ui) | A mountable engine that renders Swagger UI. |
 
 ## Installation
 
 ```ruby
 # Gemfile
 group :test do
-  gem "minitest-openapi"
+  gem "rc-minitest-openapi"
 end
 
 # These two are only needed if you want to serve the doc / UI from the app:
-gem "minitest-openapi-api"
-gem "minitest-openapi-ui"
+gem "rc-minitest-openapi-api"
+gem "rc-minitest-openapi-ui"
 ```
 
 ## Configure
